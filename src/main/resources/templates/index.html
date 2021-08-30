@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="ISO-8859-1">
+	<title>M13</title>
+	<style>
+		body {
+  			background-color: lightblue;
+		}
+		h1 {
+  			margin-left: 120px;
+  			font-size: 40px;
+		}
+		table {
+  			font-family: Arial, Helvetica, sans-serif;
+  			border-collapse: collapse;
+  			width: 30%;
+		}
+		table th, table td {
+  			border: 1px solid;
+  			padding: 4px;
+		}
+		table th {
+			background-color: darkgrey;
+			color: white;
+			border-color: black;
+		}
+		table td{
+			background-color: white;
+		}
+	</style>
+</head>
+<body>
+	<h1><a th:href="@{/}">Employee List</a></h1>
+	<table border=1>
+		<thead>
+			<tr><th> Id <th> Name <th> Lastname <th> Job <th> Salary </th>
+		</thead>
+		<tbody>
+			<tr th:if="${employees.empty}">
+					<td colspan="2"> No employees available </td>
+				</tr>
+			<tr th:each="employee : ${employees}">
+					<td><span th:text="${employee.id}"></span></td>
+					<td><span th:text="${employee.name}"></span></td>
+					<td><span th:text="${employee.lastname}"></span></td>
+					<td><span th:text="${employee.job.name}"></span></td>
+					<td><span th:text="${employee.job.salary}"></span></td>
+					<td style="background-color: darkgrey;"><a th:href="@{/delete/}+${employee.id}">Delete</a></td>
+					<td style="background-color: darkgrey;"><a th:href="@{/edit/}+${employee.id}">Edit</a></td>
+				</tr>	
+		</tbody>
+	</table>
+	
+	<form th:action="${action}" th:object="${employee}" method="post">
+			<br>ID: <input type=text name=id th:value="${employee?.id}">
+			Name: <input type=text name=name th:value="${employee?.name}">
+			Lastname: <input type=text name=lastname th:value="${employee?.lastname}"><br>
+			Job: <select th:field="*{job}">
+				<option th:each="job :${T(com.m13exercice.app.bean.Job).values()}"
+				th:value="${job}"
+				th:text="${job.name}">
+				</option>
+			</select>
+			<input type=submit name=submit th:value="${button}">
+		</form>
+	<br>
+	<form th:action="@{/search}" th:object="${employee}" method="get">
+		<h3>Filter by job</h3>
+		<select th:field="*{job}">
+			<option th:each="job :${T(com.m13exercice.app.bean.Job).values()}"
+			th:value="${job}"
+			th:text="${job.name}">
+			</option>
+		</select>
+		<input type=submit name=search value="Search">
+	</form>
+</body>
+</html>
